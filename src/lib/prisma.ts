@@ -28,17 +28,24 @@ const prisma = new PrismaClient({
   ],
 });
 
-prisma.$on("error", (e) => {
-  logger.error(e);
-});
-prisma.$on("warn", (e) => {
-  logger.warn(e);
-});
-prisma.$on("info", (e) => {
-  logger.info(e);
-});
 prisma.$on("query", (e) => {
-  logger.info(e);
+  logger.info({
+    query: e.query.replace(/"/g, "").replace(/\s+/g, " ").trim(),
+    params: JSON.parse(e.params),
+    duration: `${e.duration.toFixed(2)}ms`,
+  });
+});
+
+prisma.$on("error", (e) => {
+  logger.error(e.message);
+});
+
+prisma.$on("warn", (e) => {
+  logger.warn(e.message);
+});
+
+prisma.$on("info", (e) => {
+  logger.info(e.message);
 });
 
 export { prisma };
