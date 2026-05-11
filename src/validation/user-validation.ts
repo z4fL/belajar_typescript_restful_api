@@ -8,4 +8,9 @@ export class UserValidation {
     birthDate: z.coerce.date(),
     gender: z.string().min(3).max(10),
   });
+
+  static readonly LOGIN = z.object({
+    username: z.string().min(3).max(100),
+    password: z.string().min(5).max(100),
+  });
 }

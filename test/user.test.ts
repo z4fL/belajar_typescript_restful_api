@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import supertest from "supertest";
 import { web } from "../src/lib/web";
 import { logger } from "../src/lib/logging";
@@ -36,5 +36,50 @@ describe("POST /api/users", () => {
     expect(response.status).toBe(200);
     expect(response.body.data.username).toBe("test");
     expect(response.body.data.name).toBe("Dzaky Fadli Firmansyah");
+  });
+});
+
+describe("POST /api/users/login", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+
+  it("should not able to login if username is wrong", async () => {
+    const response = await supertest(web).post("/api/users/login").send({
+      username: "test-false",
+      password: "test123",
+    });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+  
+  it("should not able to login if password is wrong", async () => {
+    const response = await supertest(web).post("/api/users/login").send({
+      username: "test",
+      password: "test-false",
+    });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should be able to login", async () => {
+    const response = await supertest(web).post("/api/users/login").send({
+      username: "test",
+      password: "test123",
+    });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.username).toBe("test");
+    expect(response.body.data.name).toBe("Dzaky Fadli Firmansyah");
+    expect(response.body.data.token).toBeDefined();
   });
 });

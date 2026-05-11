@@ -8,15 +8,17 @@ export type UserResponse = {
   birthDate: string;
   gender: string;
   token?: string;
-}
+};
 
-export type CreateUserRequest = z.infer<typeof UserValidation.REGISTER>
+export type LoginUserRequest = z.infer<typeof UserValidation.LOGIN>;
+
+export type CreateUserRequest = z.infer<typeof UserValidation.REGISTER>;
 
 export function toUserResponse(user: User): UserResponse {
   return {
     name: user.name,
     username: user.username,
-    birthDate: user.birthDate?.toISOString().split('T')[0] ?? '',
-    gender: user.gender
-  }
+    birthDate: user.birthDate?.toISOString().split("T")[0] ?? "",
+    gender: user.gender,
+  };
 }
