@@ -13,7 +13,8 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "target": "esnext",
-    "types": ["node", "jest"],
+    "types": ["node", "vitest/globals"],
+    "esModuleInterop": true,
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
