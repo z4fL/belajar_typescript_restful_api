@@ -58,7 +58,7 @@ describe("POST /api/users/login", () => {
     expect(response.status).toBe(401);
     expect(response.body.errors).toBeDefined();
   });
-  
+
   it("should not able to login if password is wrong", async () => {
     const response = await supertest(web).post("/api/users/login").send({
       username: "test",
@@ -81,5 +81,36 @@ describe("POST /api/users/login", () => {
     expect(response.body.data.username).toBe("test");
     expect(response.body.data.name).toBe("Dzaky Fadli Firmansyah");
     expect(response.body.data.token).toBeDefined();
+  });
+});
+
+describe("GET /api/users/current", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+
+  it("should not able to get user", async () => {
+    const response = await supertest(web)
+      .get("/api/users/current")
+      .set("X-API-TOKEN", "salah");
+
+    logger.debug(response);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should be able to get user", async () => {
+    const response = await supertest(web)
+      .get("/api/users/current")
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response);
+    expect(response.status).toBe(200);
+    expect(response.body.data.username).toBe("test");
+    expect(response.body.data.name).toBe("Dzaky Fadli Firmansyah");
   });
 });
