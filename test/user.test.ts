@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import bcrypt from "bcrypt";
 import supertest from "supertest";
 import { web } from "../src/lib/web";
 import { logger } from "../src/lib/logging";
@@ -112,5 +113,102 @@ describe("GET /api/users/current", () => {
     expect(response.status).toBe(200);
     expect(response.body.data.username).toBe("test");
     expect(response.body.data.name).toBe("Dzaky Fadli Firmansyah");
+  });
+});
+
+describe("PATCH /api/users/current", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+
+  it("should reject update user if request is invalid", async () => {
+    const response = await supertest(web)
+      .patch("/api/users/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        password: "",
+        name: "",
+        birthDate: "",
+        gender: "",
+      });
+
+    logger.debug(response);
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should reject update user if token is wrong", async () => {
+    const response = await supertest(web)
+      .patch("/api/users/current")
+      .set("X-API-TOKEN", "test123")
+      .send({
+        name: "Dzaky Fadli",
+      });
+
+    logger.debug(response);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should be able to update user name", async () => {
+    const response = await supertest(web)
+      .patch("/api/users/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        name: "Dzaky Fadli",
+      });
+
+    logger.debug(response);
+    expect(response.status).toBe(200);
+    expect(response.body.data.name).toBe("Dzaky Fadli");
+  });
+
+  it("should be able to update user password", async () => {
+    const response = await supertest(web)
+      .patch("/api/users/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        password: "test-true",
+      });
+
+    logger.debug(response);
+    expect(response.status).toBe(200);
+
+    const user = UserTest.get();
+    expect(await bcrypt.compare("test-true", (await user).password)).toBe(true);
+  });
+
+  it("should be able to update user birth date", async () => {
+    const response = await supertest(web)
+      .patch("/api/users/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        birthDate: "2004-05-10",
+      });
+
+    logger.debug(response);
+    expect(response.status).toBe(200);
+
+    const user = UserTest.get();
+    expect((await user).birthDate!.toISOString().split("T")[0]).toBe("2004-05-10");
+  });
+
+  it("should be able to update user gender", async () => {
+    const response = await supertest(web)
+      .patch("/api/users/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        gender: "Female",
+      });
+
+    logger.debug(response);
+    expect(response.status).toBe(200);
+
+    const user = UserTest.get();
+    expect((await user).gender).toBe("Female");
   });
 });

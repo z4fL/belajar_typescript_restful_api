@@ -14,6 +14,8 @@ export type LoginUserRequest = z.infer<typeof UserValidation.LOGIN>;
 
 export type CreateUserRequest = z.infer<typeof UserValidation.REGISTER>;
 
+export type UpdateUserRequest = z.infer<typeof UserValidation.UPDATE>;
+
 export function toUserResponse(user: User): UserResponse {
   return {
     name: user.name,
