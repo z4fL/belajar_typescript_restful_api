@@ -13,6 +13,8 @@ export type ContactResponse = {
 
 export type CreateContactRequest = z.infer<typeof ContactValidation.CREATE>;
 
+export type UpdateContactRequest = z.infer<typeof ContactValidation.UPDATE>;
+
 export function toCreateResponse(contact: Contact): ContactResponse {
   return {
     id: contact.id,

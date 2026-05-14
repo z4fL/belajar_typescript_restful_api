@@ -8,4 +8,12 @@ export class ContactValidation {
     phone: z.string().min(1).max(15),
     note: z.string().min(1).max(100).optional(),
   });
+  static readonly UPDATE = z.object({
+    id: z.number().positive(),
+    firstName: z.string().min(1).max(100),
+    lastName: z.string().min(1).max(100).optional(),
+    email: z.email().min(1).max(100).optional(),
+    phone: z.string().min(1).max(15),
+    note: z.string().min(1).max(100).optional(),
+  });
 }
