@@ -1,4 +1,6 @@
+import { ResponseError } from "../error/response-error.js";
 import type { User } from "../generated/prisma/client.js";
+import { logger } from "../lib/logging.js";
 import { prisma } from "../lib/prisma.js";
 import {
   toCreateResponse,
@@ -26,6 +28,26 @@ export class ContactService {
     const contact = await prisma.contact.create({
       data: record,
     });
+
+    return toCreateResponse(contact);
+  }
+
+  static async get(user: User, id: number): Promise<ContactResponse> {
+    const contactId = id;
+    if (isNaN(contactId) || contactId <= 0) {
+      throw new ResponseError(400, "Invalid contact id");
+    }
+
+    const contact = await prisma.contact.findFirst({
+      where: {
+        id: contactId,
+        username: user.username,
+      },
+    });
+
+    if (!contact) {
+      throw new ResponseError(404, "Contact not found!");
+    }
 
     return toCreateResponse(contact);
   }
