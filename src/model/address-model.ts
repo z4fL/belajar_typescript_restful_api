@@ -14,6 +14,8 @@ export type AddressResponse = {
 
 export type CreateAddressRequest = z.infer<typeof AddressValidation.CREATE>;
 
+export type GetAddressRequest = z.infer<typeof AddressValidation.GET>;
+
 export function toAddressResponse(address: Address): AddressResponse {
   return {
     id: address.id,

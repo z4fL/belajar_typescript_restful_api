@@ -62,3 +62,62 @@ describe("POST /api/contacts/:contactId/addresses", () => {
     expect(response.body.data.postalCode).toBe("53398");
   });
 });
+
+describe("GET /api/contacts/:contactId/addresses/addressId", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+    await ContactTest.create();
+    await AddressTest.create();
+  });
+
+  afterEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+  });
+
+  it("should not able to get address if contact is not found ", async () => {
+    const contact = await ContactTest.get();
+    const addrress = await AddressTest.get();
+
+    const response = await supertest(web)
+      .get(`/api/contacts/${contact.id + 1}/addresses/${addrress.id}`)
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should not able to get address if address is not found ", async () => {
+    const contact = await ContactTest.get();
+    const addrress = await AddressTest.get();
+
+    const response = await supertest(web)
+      .get(`/api/contacts/${contact.id}/addresses/${addrress.id + 1}`)
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should be able to get address ", async () => {
+    const contact = await ContactTest.get();
+    const addrress = await AddressTest.get();
+
+    const response = await supertest(web)
+      .get(`/api/contacts/${contact.id}/addresses/${addrress.id}`)
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.id).toBeDefined();
+    expect(response.body.data.label).toBe("HOME");
+    expect(response.body.data.street).toBe("Jalan Desa");
+    expect(response.body.data.city).toBe("Purbalingga");
+    expect(response.body.data.province).toBe("Jawa Tengah");
+    expect(response.body.data.country).toBe("Indonesia");
+    expect(response.body.data.postalCode).toBe("53398");
+  });
+});
