@@ -15,7 +15,9 @@ export type CreateContactRequest = z.infer<typeof ContactValidation.CREATE>;
 
 export type UpdateContactRequest = z.infer<typeof ContactValidation.UPDATE>;
 
-export function toCreateResponse(contact: Contact): ContactResponse {
+export type SearchContactRequest = z.infer<typeof ContactValidation.SEARCH>;
+
+export function toContactResponse(contact: Contact): ContactResponse {
   return {
     id: contact.id,
     firstName: contact.firstName,
