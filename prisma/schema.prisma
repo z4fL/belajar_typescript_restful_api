@@ -57,13 +57,13 @@ model Address {
   city        String?      @db.VarChar(100)
   province    String?      @db.VarChar(100)
   country     String       @db.VarChar(100)
-  postal_code String       @db.VarChar(10)
+  postalCode String       @db.VarChar(10)
   isPrimary   Boolean      @default(true)
-  contact_id  Int
+  contactId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  contact Contact @relation(fields: [contact_id], references: [id])
+  contact Contact @relation(fields: [contactId], references: [id])
 
   @@map("addresses")
 }

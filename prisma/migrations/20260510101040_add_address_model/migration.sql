@@ -9,9 +9,9 @@ CREATE TABLE "addresses" (
     "city" VARCHAR(100),
     "province" VARCHAR(100),
     "country" VARCHAR(100) NOT NULL,
-    "postal_code" VARCHAR(10) NOT NULL,
+    "postalCode" VARCHAR(10) NOT NULL,
     "isPrimary" BOOLEAN NOT NULL DEFAULT true,
-    "contact_id" INTEGER NOT NULL,
+    "contactId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -19,4 +19,4 @@ CREATE TABLE "addresses" (
 );
 
 -- AddForeignKey
-ALTER TABLE "addresses" ADD CONSTRAINT "addresses_contact_id_fkey" FOREIGN KEY ("contact_id") REFERENCES "contacts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "addresses" ADD CONSTRAINT "addresses_contactId_fkey" FOREIGN KEY ("contactId") REFERENCES "contacts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
