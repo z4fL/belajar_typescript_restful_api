@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --watch --experimental-strip-types src/main.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "build": "pnpm tsc",
+    "start": "node dist/main.js"
   },
   "keywords": [],
   "author": "Dzaky Fadli Firmasyah",
