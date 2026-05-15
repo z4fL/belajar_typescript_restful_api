@@ -15,4 +15,17 @@ export class AddressValidation {
     contactId: z.number().positive(),
     id: z.number().positive(),
   });
+  
+  static readonly UPDATE = z.object({
+    id: z.number().positive(),
+    contactId: z.number().positive(),
+    label: z.enum(["HOME", "OFFICE", "CAMPUS"]),
+    street: z.string().min(1).max(255).optional(),
+    city: z.string().min(1).max(100).optional(),
+    province: z.string().min(1).max(100).optional(),
+    country: z.string().min(1).max(100),
+    postalCode: z.string().min(1).max(100),
+  });
+
+  static readonly REMOVE = this.GET
 }

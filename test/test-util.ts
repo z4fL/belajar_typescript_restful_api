@@ -105,12 +105,6 @@ export class AddressTest {
     const address = await prisma.address.findFirst({
       where: {
         contact: { username: "test" },
-        label: "HOME",
-        street: "Jalan Desa",
-        city: "Purbalingga",
-        province: "Jawa Tengah",
-        country: "Indonesia",
-        postalCode: "53398",
       },
     });
 
